@@ -1,6 +1,6 @@
 <template>
   <div class="div-book">
-    <header class="center-text">{{book.nombre}}</header>
+    <header class="center-text">{{nameBook }}</header>
     <div class="center-text">ID:{{book.id}} - Precio: {{book.price}}</div>
   </div>
 </template>
@@ -8,10 +8,10 @@
 <script>
   export default {
     name: "TestCompBook",
-    props:['book'],
+    props: {book : Object},
     data : function (){
       return{
-
+        nameBook : this.book.nombre
       }
     }
 

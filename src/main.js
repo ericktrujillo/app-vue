@@ -1,7 +1,9 @@
 import Vue from 'vue'
+import VueCompositionApi from '@vue/composition-api'
 //import App from './App'
 //import Test from './components/test/Test'
-import TestWatch from './components/test/TestWatch'
+//import TestWatch from './components/test/TestWatch'
+import AppParent from "@/components/api-composition/AppParent";
 import VueLogger from 'vuejs-logger'
 
 Vue.config.productionTip = false
@@ -16,11 +18,12 @@ const options = {
   showConsoleColors: true
 };
 
+Vue.use(VueCompositionApi);
 Vue.use(VueLogger, options);
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  template: '<TestWatch/>',
-  components: { TestWatch }
+  template: '<AppParent/>',
+  components: { AppParent }
 });
