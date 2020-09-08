@@ -2,8 +2,8 @@ import Vue from 'vue'
 import VueCompositionApi from '@vue/composition-api'
 //import App from './App'
 //import Test from './components/test/Test'
-//import TestWatch from './components/test/TestWatch'
-import AppParent from "@/components/api-composition/AppParent";
+import TestWatch from './components/test/TestWatch'
+//import AppParent from "@/components/api-composition/AppParent";
 import VueLogger from 'vuejs-logger'
 
 Vue.config.productionTip = false
@@ -24,6 +24,6 @@ Vue.use(VueLogger, options);
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  template: '<AppParent/>',
-  components: { AppParent }
+  template: '<TestWatch/>',
+  components: { TestWatch }
 });

@@ -5,18 +5,15 @@
     https://riptutorial.com/
     <p>{{message}}</p>
     <input @keyup.enter="changeName($event)"/>
-    <button @click="btnClick($event)" >Click Me</button>
+    <button @click="btnClick" >Click Me</button>
   </div>
 </template>
 
 <script>
 export default{
-  props:[ ],
+  props:{},
   events:{ /* event listeners go here */},
-  ready(){
-      this.name= "John";
-    },
-  data(){
+  data: function(){
       return{
         name:'Mart',
         lastName:'Truji'
@@ -48,7 +45,7 @@ export default{
         this.fullname = e.target.value;
         //this.name = e.target.value;
       },
-      btnClick(e){
+      btnClick(e) {
         console.log(e.toString())
         this.name = this.reversedMsg;
       }

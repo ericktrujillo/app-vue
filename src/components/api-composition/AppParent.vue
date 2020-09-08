@@ -45,7 +45,8 @@ export default {
   components:{
     AppAddTask,
     AppTaskSearch,
-    AppTaskList
+    AppTaskList,
+
   }
 }
 </script>

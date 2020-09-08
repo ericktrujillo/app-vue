@@ -2,6 +2,7 @@ https://developer.okta.com/blog/2018/11/20/build-crud-spring-and-vue
 
 paso 1 install node
 paso 2 install yarn
+paso opcional : yarn install --network-timeout 30000
 
 paso 3 : install vue clie
    -- yarn global add @vue/cli@4.5.0

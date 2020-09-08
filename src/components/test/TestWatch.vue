@@ -10,7 +10,9 @@
     <div>
       <Todos/>
     </div>
-
+    <div>
+      <Test/>
+    </div>
     <hr/>
     <ul>
       <li v-for = "(item,index) in personas" :key="item.id">
@@ -25,7 +27,11 @@
 
     <hr/>
     <div class="div-full-width">
-      <BookCmp v-for="book in books" :key="book.id" :book="book"/>
+      <BookCmp
+          v-for="itemBook in books"
+          :key="itemBook.id"
+          :book-prop="itemBook"
+          @myEventBook="showMesg"/>
     </div>
 
     <hr/>
@@ -41,11 +47,13 @@
 <script>
   import Todos from '../Todos'
   import BookCmp from './TestCompBook'
+  import Test from './Test.vue'
   import _ from 'lodash'
   import axios from 'axios'
 
   export default {
-    data() {
+    props :{ },
+    data :function() {
       return {
         question : '',
         answer : 'No puedo darte una respuesta hasta q hagas una pregunta!',
@@ -89,7 +97,7 @@
         this.debouncedGetAnswer()
       }
     },
-    created: function () {
+    created: function() {
       // _.debounce es una función proporcionada por lodash para limitar cuan
       // a menudo se puede ejecutar una operación particularmente costosa.
       // En este caso, queremos limitar la frecuencia con la que accedemos a
@@ -116,11 +124,15 @@
           .catch(function (error){
             comp.answer = '¡Error! No se pudo alcanzar la API. ' + error
           })
+      },
+      showMesg :function (obj){
+        alert(obj.id+"-"+obj.nombre)
       }
     },
     components :{
       Todos,
-      BookCmp
+      BookCmp,
+      Test
     }
   }
 </script>
