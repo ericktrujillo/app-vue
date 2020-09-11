@@ -2,7 +2,7 @@
   <div id="watch-example"><!--this is the root DIV , in there put your COMPONENTS, DIRECTIVS etc-->
     <p>
       Haz una pregunta de si/no:
-      <input v-bind:class="{'input-error' : errorInput}" v-model="question">
+      <input v-bind:class="{'input-error' : errorInput}" v-model="question"/>
     </p>
     <p>{{answer}}</p>
 
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-  import Todos from '../Todos'
+  import Todos from '../todo-app/Todos'
   import BookCmp from './TestCompBook'
   import Test from './Test.vue'
   import _ from 'lodash'
@@ -93,7 +93,7 @@
       // cada ves que 'question' cambie se ejecutara la sgt func
       // eslint-disable-next-line no-unused-vars
       question: function (newQuestion, oldQuestion) {
-        this.answer = 'Esperando que deje de escribir ...'
+        this.answer = 'Esperando que deje de escribir ...';
         this.debouncedGetAnswer()
       }
     },

@@ -2,7 +2,7 @@
   <div class="div-book">
     <header class="center-text">{{ nameBook }}</header>
     <div class="center-text">ID:{{bookProp.id}} - Precio: {{bookProp.price}}</div>
-    <input value="Click Here" type="button" @click="myEventBtn(bookProp)" />
+    <input value="Click here" type="button" @click="myEventBtn(bookProp)"/>
   </div>
 </template>
 
@@ -11,7 +11,7 @@
     name: "TestCompBook",
     props: {bookProp : Object},
     data :function () {
-      return { nameBook : this.bookProp.nombre }
+      return { nameBook : this.bookProp.nombre}
     },
     methods : {
       myEventBtn:function (value){

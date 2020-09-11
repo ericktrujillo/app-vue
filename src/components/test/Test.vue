@@ -55,4 +55,7 @@ export default{
 
 <style>
   [v-cloak] { display: none; }
+  .a{
+    background: darkcyan;
+  }
 </style>

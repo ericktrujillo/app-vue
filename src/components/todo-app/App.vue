@@ -10,7 +10,8 @@
 </template>
 
 <script>
-import Todos from './components/Todos'
+import Todos from './Todos'
+
 // app Vue instance
 const app = {
   name: 'app',
@@ -20,6 +21,7 @@ const app = {
   // app initial state
   data: () => {
     return {
+
     }
   }
 }

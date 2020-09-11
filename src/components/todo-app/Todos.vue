@@ -17,12 +17,12 @@
         <section class="main" v-show="todos.length" v-cloak>
           <input class="toggle-all" type="checkbox" v-model="allDone">
           <ul class="todo-list">
-            <li v-for="todo in filteredTodos"
+            <li v-for="todo in todosListReceived"
                 class="todo"
-                :key="todo.id"
+                :key="todo.idTodo"
                 :class="{ completed: todo.completed, editing: todo == editedTodo }">
               <div class="view">
-                <input class="toggle" type="checkbox" v-model="todo.completed" @change="completeTodo(todo)">
+                <input class="checkmark" type="checkbox" v-model="todo.completed" @change="completeTodo(todo)">
                 <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
                 <button class="destroy" @click="removeTodo(todo)"></button>
               </div>
@@ -35,8 +35,11 @@
             </li>
           </ul>
         </section>
-        <footer class="footer" v-show="todos.length" v-cloak>
-          <span class="todo-count">
+        <footer class="footer" v-show="todos.length" >
+          <FooterTodo :todos="todos" @myEventFooter="loadListTodo">
+
+          </FooterTodo>
+          <!--<span class="todo-count">
             <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
           </span>
           <ul class="filters">
@@ -46,7 +49,7 @@
           </ul>
           <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
             Clear completed
-          </button>
+          </button>-->
         </footer>
       </div>
     </section>
@@ -57,23 +60,9 @@
 </template>
 
 <script>
+import api from './TodosApi'
+import FooterTodo from './Footer-Todo'
 
-// visibility filters
-let filters = {
-  all: function (todos) {
-    return todos
-  },
-  active: function (todos) {
-    return todos.filter(function (todo) {
-      return !todo.completed
-    })
-  },
-  completed: function (todos) {
-    return todos.filter(function (todo) {
-      return todo.completed
-    })
-  }
-}
 
 // app Vue instance
 const Todos = {
@@ -86,30 +75,37 @@ const Todos = {
   data: function() {
     return {
       todos: [],
+      todosListReceived: [],
       newTodo: '',
       editedTodo: null,
-      visibility: 'all',
       loading: true,
       error: null,
     }
   },
-
   mounted: function() {
     // inject some startup data
-    this.todos = [{title: 'Drink coffee', completed:false},{title: 'Write REST API', completed:false}];
-    // hide the loading message
-    this.loading = false;
+    api.getAll().then(response =>{
+      this.$log.debug("Data loadad: ", response.data)
+      this.todos = response.data;
+      this.todosListReceived = this.todos;//cargar al iniciar
+    }).catch(error =>{
+      alert(error)
+      this.$log.debug(error)
+      this.error ="Failed to load Todos"
+    }).finally(()=>{
+      this.loading= false;
+    })
+
   },
 
   // computed properties
   // http://vuejs.org/guide/computed.html
   computed: {
-    filteredTodos: function () {
-      return filters[this.visibility](this.todos)
+    //los que se van a mostrar
+    todosToListed: function () {
+      //return filters[this.visibility](this.todos)
     },
-    remaining: function () {
-      return filters.active(this.todos).length
-    },
+
     allDone: {
       get: function () {
         return this.remaining === 0
@@ -128,41 +124,50 @@ const Todos = {
     }
   },
 
-  filters: {
-    pluralize: function (n) {
-      return n === 1 ? 'item' : 'items'
-    }
-  },
-
   // methods that implement data logic.
   // note there's no DOM manipulation here at all.
   methods: {
+    loadListTodo: function (listTodo) {
+      this.todosListReceived = listTodo;
+    },
 
     addTodo: function () {
       var value = this.newTodo && this.newTodo.trim()
       if (!value) {
         return
       }
-
-      this.todos.push({
-        title: value,
-        completed: false
-      });
+      api.createNew(value.toString(),false).then((response)=>{
+        this.$log.debug("New Item is created: ",response);
+        this.todos.push({
+          idTodo: response.data.idTodo,
+          title : value,
+          completed:false
+        })
+      }).catch((error)=>{
+        this.$log.debug(error)
+      })
 
       this.newTodo = ''
     },
 
-    setVisibility: function(vis) {
-      this.visibility = vis
-    },
-
-    // eslint-disable-next-line no-unused-vars
     completeTodo (todo) {
-
+      api.updateForId(todo.idTodo, todo.title, todo.completed).then((response)=>{
+        this.$log.info("Item updated ",response.data)
+      }).catch((error)=>{
+        this.$log.debug(error)
+        todo.completed = !todo.completed
+        this.error="Failed to updated todo"
+      })
     },
 
     removeTodo: function (todo) { // notice NOT using "=>" syntax
-      this.todos.splice(this.todos.indexOf(todo), 1)
+      api.removeForId(todo.idTodo).then(()=>{
+        this.$log.debug("Item removed:", todo);
+        this.todos.splice(this.todos.indexOf(todo), 1)
+      }).catch((error)=>{
+        this.$log.debug(error);
+        this.error = "Failed to remove todo"
+      });
     },
 
     editTodo: function (todo) {
@@ -175,8 +180,18 @@ const Todos = {
         return
       }
 
-      this.editedTodo = null
-      todo.title = todo.title.trim()
+      this.$log.info("Item updated",todo);
+
+      api.updateForId(todo.idTodo,todo.title.trim(),todo.completed).then((response)=>{
+        this.$log.info("Item updated:", response.data);
+        this.editedTodo = null;
+        todo.title = todo.title.trim();
+
+      }).catch((error)=>{
+        this.$log.debug(error)
+        this.cancelEdit(todo)
+        this.error = "Failed to update todo"
+      })
 
       if (!todo.title) {
         this.removeTodo(todo)
@@ -188,13 +203,17 @@ const Todos = {
       todo.title = this.beforeEditCache
     },
 
-    removeCompleted: function () {
+    /*removeCompleted: function () {
       this.todos = filters.active(this.todos)
-    },
+    },*/
 
     handleErrorClick: function () {
       this.error = null;
     },
+  },
+
+  components:{
+    FooterTodo
   },
 
   // a custom directive to wait for the DOM to be updated
@@ -213,5 +232,5 @@ export default Todos
 </script>
 
 <style>
-[v-cloak] { display: none; }
+  [v-cloak] { display: none; }
 </style>

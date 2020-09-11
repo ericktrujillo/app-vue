@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueCompositionApi from '@vue/composition-api'
-//import App from './App'
+import App from './components/todo-app/App'
 //import Test from './components/test/Test'
-import TestWatch from './components/test/TestWatch'
+//import TestWatch from './components/test/TestWatch'
 //import AppParent from "@/components/api-composition/AppParent";
 import VueLogger from 'vuejs-logger'
 
@@ -24,6 +24,6 @@ Vue.use(VueLogger, options);
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  template: '<TestWatch/>',
-  components: { TestWatch }
+  template: '<App/>',
+  components: { App }
 });
