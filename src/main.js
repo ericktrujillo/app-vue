@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import router from './components/todo-app/router.'
 import VueCompositionApi from '@vue/composition-api'
 import App from './components/todo-app/App'
 //import Test from './components/test/Test'
@@ -24,6 +25,7 @@ Vue.use(VueLogger, options);
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  router : router,
   template: '<App/>',
   components: { App }
 });

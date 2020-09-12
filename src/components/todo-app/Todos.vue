@@ -36,20 +36,8 @@
           </ul>
         </section>
         <footer class="footer" v-show="todos.length" >
-          <FooterTodo :todos="todos" @myEventFooter="loadListTodo">
-
+          <FooterTodo :todos="todos" @myEventFooter="loadListTodo" @myEventFooter2="loadListTodo">
           </FooterTodo>
-          <!--<span class="todo-count">
-            <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
-          </span>
-          <ul class="filters">
-            <li><a href="#/all" @click="setVisibility('all')" :class="{ selected: visibility == 'all' }">All</a></li>
-            <li><a href="#/active" @click="setVisibility('active')" :class="{ selected: visibility == 'active' }">Active</a></li>
-            <li><a href="#/completed" @click="setVisibility('completed')" :class="{ selected: visibility == 'completed' }">Completed</a></li>
-          </ul>
-          <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
-            Clear completed
-          </button>-->
         </footer>
       </div>
     </section>
@@ -127,6 +115,7 @@ const Todos = {
   // methods that implement data logic.
   // note there's no DOM manipulation here at all.
   methods: {
+    //metodo que accione a los eventos generados por "FooterTodo"
     loadListTodo: function (listTodo) {
       this.todosListReceived = listTodo;
     },
@@ -147,7 +136,7 @@ const Todos = {
         this.$log.debug(error)
       })
 
-      this.newTodo = ''
+      this.newTodo = '';
     },
 
     completeTodo (todo) {
@@ -174,7 +163,6 @@ const Todos = {
       this.beforeEditCache = todo.title
       this.editedTodo = todo
     },
-
     doneEdit: function (todo) {
       if (!this.editedTodo) {
         return
@@ -197,16 +185,10 @@ const Todos = {
         this.removeTodo(todo)
       }
     },
-
     cancelEdit: function (todo) {
       this.editedTodo = null
       todo.title = this.beforeEditCache
     },
-
-    /*removeCompleted: function () {
-      this.todos = filters.active(this.todos)
-    },*/
-
     handleErrorClick: function () {
       this.error = null;
     },

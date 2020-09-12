@@ -21,14 +21,36 @@ const app = {
   // app initial state
   data: () => {
     return {
+      activeUser : null
+    }
+  },
 
+  async created(){
+    await this.refreshActiveUser();
+  },
+
+  watch :{
+    '$route' : 'refresActiveUser'
+  },
+
+  methods : {
+    async refreshActiveUser(){
+      this.activeUser = await this.$auth.getUser();
+      this.$log.debug('activeUser',this.activeUser)
+    },
+
+    async handleLogout(){
+      await this.$auth.logout();
+      await this.refreshActiveUser();
+      this.$router.go('/');
     }
   }
+
 }
 
 export default app
 </script>
 
 <style>
-[v-cloak] { display: none; }
+  [v-cloak] { display: none; }
 </style>

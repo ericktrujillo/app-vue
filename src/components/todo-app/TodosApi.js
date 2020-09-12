@@ -1,6 +1,7 @@
 import axios from 'axios'
+import Vue from 'vue'
 
-const SERVER_URL ='http://localhost:8082'
+const SERVER_URL ='http://localhost:8083'
 
 const instance = axios.create({
     baseURL : SERVER_URL,
@@ -8,25 +9,37 @@ const instance = axios.create({
 })
 
 export default {
+    async execute(method, resource, data, config) {
+        let accessToken = await Vue.prototype.$auth.getAccessToken()
+        return instance({
+            method:method,
+            url: resource,
+            data,
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            },
+            ...config
+        })
+    },
+
     //create
-    createNew : (text,completed)=> {
-        return instance.post('todos',{title:text, completed :completed})
+    createNew : function(text,completed) {
+        return this.execute('POST','todos',{title : text, completed : completed});
+        //return instance.post('todos',{title:text, completed :completed})
     },
     //Read
-    getAll : ()=> {
-        return instance.get('todos')
-        /*instance.get('todos', {
-            transformResponse: [function (data) {
-                return data ? JSON.parse(data).todos : data;
-            }]
-        })*/
+    getAll : function (){
+         return this.execute('GET','todos', null);
+        //return instance.get('todos', );
     },
     //Update
-    updateForId : (id, text , completed) =>{
-        return instance.put('todos/'+id,{title:text, completed: completed})
+    updateForId : function (id, text , completed) {
+        return this.execute('PUT','todos/'+id,{title : text, completed:completed});
+        //return instance.put('todos/'+id,{title:text, completed: completed})
     },
     //Delete
-    removeForId : (id) =>{
-        return instance.delete('todos/'+id);
+    removeForId :function(id){
+        return this.execute('DELETE','todos/'+id)
+        //return instance.delete('todos/'+id);
     }
 }
