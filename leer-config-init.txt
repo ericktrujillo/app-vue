@@ -13,3 +13,7 @@ paso 4 : para crear una nueva aplicacion ubicarse en folder de la app
 paso 5 : install dependencies , se instala dependecias de la sgte forma
    --yarn add axios@0.20.0 vuejs-logger@1.5.3
    --yarn add lodash@4.17.17
+
+
+
+https://developer.okta.com/blog/2019/03/12/oauth2-spring-security-guide
